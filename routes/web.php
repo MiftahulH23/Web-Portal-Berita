@@ -8,6 +8,7 @@ use App\Http\Controllers\NewsController;
 
 Route::get('/',[NewsController::class, 'index']);
 Route::post('/news',[NewsController::class, 'store']);
+Route::get('/news',[NewsController::class, 'show']);
 
 Route::get('welcome', function () {
     return Inertia::render('Home', [
