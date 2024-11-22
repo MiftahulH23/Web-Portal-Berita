@@ -22,6 +22,9 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "@inertiajs/inertia": "^0.11.1"
+        "@emotion/react": "^11.13.5",
+        "@emotion/styled": "^11.13.5",
+        "@inertiajs/inertia": "^0.11.1",
+        "@mui/material": "^6.1.8"
     }
 }

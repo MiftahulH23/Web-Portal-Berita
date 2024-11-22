@@ -59,7 +59,7 @@ class NewsController extends Controller
         // News::create($validatedData);
 
 
-        return redirect()->back()->with('message', 'Data berhasil disimpan!');
+        return redirect()->back()->with('message', 'News created successfully.');
     }
 
     /**
