@@ -48,6 +48,17 @@ class NewsController extends Controller
         $news->category = $request->category;
         $news->author = Auth::user()->name;
         $news->save();
+
+
+        // $validatedData = $request->validate([
+        //     'title' => 'required|min:1',
+        //     'description' => 'required|min:1',
+        //     'category' => 'required|min:1',
+        // ]);
+        // $validatedData['author'] = Auth::user()->name;
+        // News::create($validatedData);
+
+
         return redirect()->back()->with('message', 'Data berhasil disimpan!');
     }
 
