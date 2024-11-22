@@ -2,43 +2,50 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
+import { usePage } from '@inertiajs/react';
 
 export default function Dashboard(props) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("");
-
     const [isNotif, setIsNotif] = useState(false);
+    const { flash, errors } = usePage().props;
+    const [flashMessage, setFlashMessage] = useState(flash.message);
+
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const formData = new FormData(e.target);
 
         const data = {
-            title,
-            description,
-            category,
+            title: formData.get("title"),
+            description: formData.get("description"),
+            category: formData.get("category"),
         };
-        Inertia.post("/news", data);
-        setIsNotif(true);
-        setTitle("");
-        setDescription("");
-        setCategory("");
+        Inertia.post("/news", data, {
+            preserveState: true,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+        });
     };
 
-    // useEffect(() => {
-    //     if (props.flash.message) {
-    //         setTimeout(() => {
-    //             setIsNotif(false);
-    //         }, 3000);
-    //     }
-    // }, [props.flash.message]);
+    useEffect(() => {
+        if (errors) {
+            setIsNotif(true);
+            setTimeout(() => {
+                setIsNotif(false);
+            }, 3000);
+        }
+    }, []);
+    setTimeout(() =>{
+        setFlashMessage(null);
+    }, 3000);
 
+    // Untuk Mengambil Data
     useEffect(() => {
         if (!props.myNews) {
             Inertia.get("/news");
         }
         return;
-        console.log("props", props);
     }, []);
 
     console.log("props last", props);
@@ -57,28 +64,33 @@ export default function Dashboard(props) {
                     <form
                         onSubmit={handleSubmit}
                         className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-4 flex flex-col gap-2"
-                    >
-                        <div>{isNotif && props.flash.message}</div>
+                    >               
+                        {isNotif && errors && (
+                            <div>{errors.category}</div>
+                        )}
+
+
+                        {flashMessage && (
+                            <div>{flashMessage}</div>
+                        )}
+
                         <input
                             type="text"
                             placeholder="Title"
+                            name="title"
                             className="input input-bordered w-full"
-                            onChange={(e) => setTitle(e.target.value)}
-                            value={title}
                         />
                         <input
                             type="text"
                             placeholder="descripsi"
+                            name="description"
                             className="input input-bordered w-full"
-                            onChange={(e) => setDescription(e.target.value)}
-                            value={description}
                         />
                         <input
                             type="text"
                             placeholder="category"
+                            name="category"
                             className="input input-bordered w-full"
-                            onChange={(e) => setCategory(e.target.value)}
-                            value={category}
                         />
                         <button className="btn btn-primary w-fit" type="submit">
                             Submit

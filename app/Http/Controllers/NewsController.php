@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 class NewsController extends Controller
 {
     /**
@@ -40,15 +41,14 @@ class NewsController extends Controller
             'description' => 'required',
             'category' => 'required',
         ]);
-
+        
         $news = new News();
         $news->title = $request->title;
         $news->description = $request->description;
         $news->category = $request->category;
         $news->author = Auth::user()->name;
         $news->save();
-        return redirect()->back()->with('message', 'News created successfully');
-        
+        return redirect()->back()->with('message', 'Data berhasil disimpan!');
     }
 
     /**
@@ -57,6 +57,7 @@ class NewsController extends Controller
     public function show(News $news)
     {
         // $myNews = $news::all();
+        
         $myNews = News::where('author', Auth::user()->name)->get();
         return Inertia::render('Dashboard', [
             'myNews' => $myNews,
